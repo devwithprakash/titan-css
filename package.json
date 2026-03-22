@@ -1,0 +1,21 @@
+{
+  "name": "titan-css-plus",
+  "version": "1.0.5",
+  "description": "Runtime utility-first CSS engine (Pro version)",
+  "main": "dist/titan.js",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/runtime.js --bundle --outfile=dist/titan.js"
+  },
+  "keywords": [
+    "titan-css",
+    "utility-css",
+    "tailwind",
+    "css-framework"
+  ],
+  "author": "Prakash Jangid",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.27.4"
+  }
+}
