@@ -1,19 +1,33 @@
-import { generateClasses } from "./rules.js";
+import { generateClass } from "./rules.js";
 
 const style = document.createElement("style");
 document.head.appendChild(style);
 
-function scan() {
-  const elements = document.body.querySelectorAll("[class*=titan]");
+const cssSet = new Set();
 
-  const cssSet = new Set();
-
-  elements.forEach((el) => {
-    const rules = generateClasses(el);
-    rules.forEach((r) => cssSet.add(r));
+function process(el) {
+  el.classList.forEach((cls) => {
+    const rule = generateClass(cls);
+    if (rule) cssSet.add(rule);
   });
+}
 
-  style.textContent = [...cssSet].join("\n");
+function scan(root = document.body) {
+  root.querySelectorAll("[class*='titan-']").forEach(process);
+  style.textContent = [...cssSet].join("");
 }
 
 scan();
+
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((m) => {
+    m.addedNodes.forEach((node) => {
+      if (node.nodeType === 1) {
+        process(node);
+        scan(node);
+      }
+    });
+  });
+});
+
+observer.observe(document.body, { childList: true, subtree: true });

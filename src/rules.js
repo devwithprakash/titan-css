@@ -1,60 +1,55 @@
-export function generateClasses(el) {
-  const rules = [];
+// rules.js
+const styles = {
+  bg: (v) => `background-color:${v};`,
+  color: (v) => `color:${v};`,
+  text: (v) => `font-size:${v}px;`,
+  weight: (v) => `font-weight:${v};`,
+  lh: (v) => `line-height:${v};`,
+  align: (v) => `text-align:${v};`,
+  transform: (v) => `text-transform:${v};`,
+  spacing: (v) => `letter-spacing:${v}px;`,
 
-  const styles = {
-    // Colors
-    bg: (value) => `background-color:${value};`,
-    color: (value) => `color:${value};`,
+  display: (v) => `display:${v};`,
+  hidden: () => `display:none;`,
+  flexdir: (v) => `flex-direction:${v};`,
+  justify: (v) => `justify-content:${v};`,
+  items: (v) => `align-items:${v};`,
+  gap: (v) => `gap:${v}px;`,
+  width: (v) => `width:${v}px;`,
+  height: (v) => `height:${v}px;`,
+  opacity: (v) => `opacity:${v};`,
 
-    // Typography
-    text: (value) => `font-size:${value}px;`,
-    weight: (value) => `font-weight:${value};`,
-    lh: (value) => `line-height:${value};`,
-    align: (value) => `text-align:${value};`,
-    transform: (value) => `text-transform:${value};`,
-    spacing: (value) => `letter-spacing:${value}px;`,
+  radius: (v) => `border-radius:${v}px;`,
+  border: (v) => `border:${v};`,
+  bordercolor: (v) => `border-color:${v};`,
 
-    // Display & layout
-    display: (value) => `display:${value};`,
-    hidden: () => `display:none;`,
-    flexdir: (value) => `flex-direction:${value};`,
-    justify: (value) => `justify-content:${value};`,
-    items: (value) => `align-items:${value};`,
-    gap: (value) => `gap:${value}px;`,
-    width: (value) => `width:${value}px;`,
-    height: (value) => `height:${value}px;`,
-    opacity: (value) => `opacity:${value};`,
+  p: (v) => `padding:${v}px;`,
+  px: (v) => `padding-left:${v}px;padding-right:${v}px;`,
+  py: (v) => `padding-top:${v}px;padding-bottom:${v}px;`,
+  pt: (v) => `padding-top:${v}px;`,
+  pr: (v) => `padding-right:${v}px;`,
+  pb: (v) => `padding-bottom:${v}px;`,
+  pl: (v) => `padding-left:${v}px;`,
 
-    // Borders
-    radius: (value) => `border-radius:${value}px;`,
-    border: (value) => `border:${value};`,
-    bordercolor: (value) => `border-color:${value};`,
+  m: (v) => `margin:${v}px;`,
+  mx: (v) => `margin-left:${v}px;margin-right:${v}px;`,
+  my: (v) => `margin-top:${v}px;margin-bottom:${v}px;`,
+  mt: (v) => `margin-top:${v}px;`,
+  mr: (v) => `margin-right:${v}px;`,
+  mb: (v) => `margin-bottom:${v}px;`,
+  ml: (v) => `margin-left:${v}px;`,
+};
 
-    // Spacing (padding/margin)
-    p: (value) => `padding:${value}px;`,
-    px: (value) => `padding-left:${value}px;padding-right:${value}px;`,
-    py: (value) => `padding-top:${value}px;padding-bottom:${value}px;`,
-    pt: (value) => `padding-top:${value}px;`,
-    pr: (value) => `padding-right:${value}px;`,
-    pb: (value) => `padding-bottom:${value}px;`,
-    pl: (value) => `padding-left:${value}px;`,
+const cache = new Map();
 
-    m: (value) => `margin:${value}px;`,
-    mx: (value) => `margin-left:${value}px;margin-right:${value}px;`,
-    my: (value) => `margin-top:${value}px;margin-bottom:${value}px;`,
-    mt: (value) => `margin-top:${value}px;`,
-    mr: (value) => `margin-right:${value}px;`,
-    mb: (value) => `margin-bottom:${value}px;`,
-    ml: (value) => `margin-left:${value}px;`,
-  };
+export function generateClass(cls) {
+  if (cache.has(cls)) return cache.get(cls);
 
-  for (const cls of el.classList) {
-    const [, key, value] = cls.split("-");
+  if (!cls.startsWith("titan-")) return "";
 
-    if (styles[key]) {
-      rules.push(`.${cls}{${styles[key](value)}}`);
-    }
-  }
+  const [, key, value] = cls.split("-");
+  const rule = styles[key] ? `.${cls}{${styles[key](value)}}` : "";
 
-  return rules;
+  cache.set(cls, rule);
+  return rule;
 }
